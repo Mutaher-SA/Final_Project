@@ -19,10 +19,46 @@ library(tidyverse)
 library(knitr)
 library(dplyr)
 library(plotly)
+library(data.table)
 
-Buses_Data <- read_csv(here("./BusesFile.csv"))
+
+```
+
+```{r}
+#comments from Batool
+# 1- the reason we use R Markdown is because we want to orgaised the code and split it into chunks. Don't add all the code in one chunk
+# 2- the code lack documention, why did you go through thses steps, what are you trying to do in each step, add comments before each step and add more general docs n the README
+```
+
+# Introduction
+
+You should write an intro here about the project
+
+```{r}
+
+Buses_Data <- read_csv(here("data","BusesFile.csv"))
 glimpse(Buses_Data)
 
+```
+
+```{r}
+## In order to transpose the `Buses_Data`, you can start with transpose() function but you might need to refine the data depending on how the data looks like
+  
+#transpose data frame
+df_t <- transpose(Buses_Data)
+
+#redefine row and column names
+rownames(df_t) <- colnames(Buses_Data)
+colnames(df_t) <- rownames(Buses_Data)
+
+# redefine the 1st row
+colnames(df_t) <- df_t[1, ]
+df_t <- df_t[-1, ]
+
+
+```
+
+```{r}
 # Bus Table for the whole month
 Tbl_Bus <- tibble::tribble(
     ~Day_Name, ~Date_number, ~Ajyad1, ~Ajyad2, ~BabAli, ~AmerStation, ~King.Abdullah, ~Al.Kabaa.Mountian, ~Jarwal, ~Baksh,
@@ -59,10 +95,14 @@ Tbl_Bus <- tibble::tribble(
      "Sunday",            1,       0,       0,     180,          464,              0,                 73,     185,    143
   )
 
-require(knitr)
 kable(Tbl_Bus, digits = 3, row.names = FALSE, align = "c",
               caption = "Statistics of Buses for all days")
 
+
+```
+
+
+```{r}
 TotalBusForEachDay <- Buses_Data %>%
                     select(Day_Name:Baksh)
  
@@ -73,11 +113,19 @@ fig1 <- plot_ly(TotalBusForEachDay, x = ~Date_number, y = ~Sum_Of_Day,
                              color = 'rgba(200, 110, 160, .9)',
                              line = list(color = 'rgba(152, 0, 0, .8)',
                                          width = 2)))
+
+```
+
+
+```{r}
 fig1 <- fig1 %>% layout(title = 'Days distribution',
          yaxis = list(zeroline = FALSE),
          xaxis = list(zeroline = FALSE))
 fig1
 
+```
+
+```{r}
 fig2 <- plot_ly(TotalBusForEachDay, x = ~Day_Name, y = ~Sum_Of_Day,
                marker = list(size = 10,
                              color = 'rgba(153, 170, 200, .9)',
@@ -87,6 +135,10 @@ fig2 <- fig2 %>% layout(title = 'The days when the largest number of buses were 
          yaxis = list(zeroline = FALSE),
          xaxis = list(zeroline = FALSE))
 fig2
+
+```
+
+```{r}
 
 sumOfBuseForAllStations <- Buses_Data %>%
                            select(Ajyad1:Baksh) %>%
@@ -103,6 +155,5 @@ sumOfBuseForJuma <- Buses_Data %>%
 kable(sumOfBuseForJuma, digits = 3, row.names = FALSE, align = "c",
               caption = " Bus count For all Jumaa Days")
 
-
-
 ```
+
