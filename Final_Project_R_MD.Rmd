@@ -9,10 +9,10 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = FALSE)
 ```
 
-```{r}
+```{r message=FALSE, warning=FALSE}
 
 library(here)
 library(tidyverse)
@@ -20,7 +20,7 @@ library(knitr)
 library(dplyr)
 library(plotly)
 
-Buses_Data <- read.csv(here("G:\\R_project\\Final_Project\\BusesFile.csv"))
+Buses_Data <- read_csv(here("./BusesFile.csv"))
 glimpse(Buses_Data)
 
 # Bus Table for the whole month
